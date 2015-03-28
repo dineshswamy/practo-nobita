@@ -1,7 +1,9 @@
 package com.application.nobita;
 
 import android.app.Notification;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,7 +25,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,20 +41,24 @@ public class TokenListViewActivity  extends ActionBarActivity{
     RequestQueue requestQueue;
     TokenListViewAdapter tokenListViewAdapter;
     LinearLayoutManager layoutManager;
+    SharedPreferences _prefs;
     public void onCreate(Bundle onsavedInstanceState) {
         super.onCreate(onsavedInstanceState);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         requestQueue = Volley.newRequestQueue(this);
         setContentView(R.layout.token_list_activity);
+
         recyclerView = (RecyclerView)findViewById(R.id.token_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
+        _prefs = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
 
     public void getDoctorTokenList(){
 
         String url = "http://shizuka2-noalpha.rhcloud.com/doctor-api/list-tokens";
+        final String doctor_location_id = _prefs.getString("doctor_location_id","1");
         StringRequest getTokenDetailsRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {
@@ -66,6 +75,7 @@ public class TokenListViewActivity  extends ActionBarActivity{
                                 clinicToken.setPatient_name(token.getString("patient_name"));
                                 clinicToken.setPatient_phone_no(token.getString("patient_phone_no"));
                                 clinicToken.setPatient_id(token.getString("patient_id"));
+                                clinicToken.setToken_id(token.getString("token_id"));
                                 //clinicToken.setPatient_reason(token.getString("patient_phone_no"));
                                 clinicToken.setToken_serial_no(token.getString("token_serial_no"));
                                 clinicToken.setToken_status(token.getString("token_status"));
@@ -90,11 +100,10 @@ public class TokenListViewActivity  extends ActionBarActivity{
             protected Map<String, String> getParams()
             {
                 Map<String, String>  params = new HashMap<String, String>();
-                params.put("start_time", "09:00:00");
-                params.put("token_timestamp", "2015:12:25 00:03:00");
-                params.put("no_of_tokens", "12");
-                params.put("doctor_location_id", "1");
 
+                params.put("token_timestamp",  new SimpleDateFormat("yyyy-MM-dd").format(new Date()).toString()+" 00:00:00");
+                params.put("doctor_location_id", doctor_location_id);
+                Log.w("Doctor",params.toString());
                 return params;
             }
         };
@@ -110,7 +119,7 @@ public class TokenListViewActivity  extends ActionBarActivity{
 
     public void setListViewAdapter( ArrayList<ClinicToken> clinicTokenArrayList ){
 
-        tokenListViewAdapter = new TokenListViewAdapter(clinicTokenArrayList);
+        tokenListViewAdapter = new TokenListViewAdapter(clinicTokenArrayList,this);
         recyclerView.setAdapter(null);
         recyclerView.setAdapter(tokenListViewAdapter);
         tokenListViewAdapter.notifyDataSetChanged();

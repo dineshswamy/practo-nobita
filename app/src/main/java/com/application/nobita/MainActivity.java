@@ -1,6 +1,7 @@
 package com.application.nobita;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -11,6 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -18,11 +22,15 @@ public class MainActivity extends ActionBarActivity {
     ViewPagerAdapter adapter;
     ViewPager pager;
     SlidingTabLayout tabs;
+    Context context;
+    public RequestQueue requestQueue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.main_activity_toolbar);
+        requestQueue = Volley.newRequestQueue(this);
         setSupportActionBar(toolbar);
         String[] Titles = {"Options","Tokens"};
         adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,2);
@@ -91,7 +99,10 @@ public class MainActivity extends ActionBarActivity {
 
             if(position == 0) // if the position is 0 we are returning the Firs t tab
             {
-                return new ConfigurationFragment();
+                ConfigurationFragment configurationFragment = new  ConfigurationFragment();
+                configurationFragment.setContext(context);
+
+                return configurationFragment;
             }
             else             // As we are having 2 tabs if the position is now 0 it must be 1 so we are returning second tab
             {

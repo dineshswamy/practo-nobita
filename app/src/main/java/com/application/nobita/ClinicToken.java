@@ -51,6 +51,15 @@ public class ClinicToken {
     private String token_serial_no;
     private String token_status;
     private String patient_reason;
+    private String token_id;
+
+    public String getToken_id() {
+        return token_id;
+    }
+
+    public void setToken_id(String token_id) {
+        this.token_id = token_id;
+    }
 
     public String getPatient_id() {
         return patient_id;

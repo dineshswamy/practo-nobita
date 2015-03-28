@@ -3,22 +3,30 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:gravity="center"
     android:padding="15dp"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+
+        >
 <EditText
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:id="@+id/no_of_tokens"
+    android:inputType="number"
     android:hint="No of tokens"
+
     />
  <EditText
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:id="@+id/choose_clinic"
         android:hint="Choose clinic"
+
         />
 
 

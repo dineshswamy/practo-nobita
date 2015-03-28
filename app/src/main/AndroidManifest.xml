@@ -25,7 +25,9 @@
         </activity>
         <activity
             android:name=".TokenListViewActivity"
-            android:label="Token status" >
+            android:label="Token status"
+            android:windowSoftInputMode="stateHidden"
+            >
 
         </activity>
 
