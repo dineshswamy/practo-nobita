@@ -93,7 +93,10 @@ public class MainActivity extends ActionBarActivity {
             {
                 return new ConfigurationFragment();
             }
-
+            else             // As we are having 2 tabs if the position is now 0 it must be 1 so we are returning second tab
+            {
+              return new TokenListFragment();
+            }
 
 
         }
