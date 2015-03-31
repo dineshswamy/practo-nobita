@@ -58,7 +58,7 @@ public class TokenListViewActivity  extends ActionBarActivity{
     public void getDoctorTokenList(){
 
         String url = "http://shizuka2-noalpha.rhcloud.com/doctor-api/list-tokens";
-        final String doctor_location_id = _prefs.getString("doctor_location_id","1");
+        final int doctor_location_id = 3;
         StringRequest getTokenDetailsRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {
@@ -101,8 +101,8 @@ public class TokenListViewActivity  extends ActionBarActivity{
             {
                 Map<String, String>  params = new HashMap<String, String>();
 
-                params.put("token_timestamp",  new SimpleDateFormat("yyyy-MM-dd").format(new Date()).toString()+" 00:00:00");
-                params.put("doctor_location_id", doctor_location_id);
+                params.put("token_timestamp","2015-04-28 00:00:00");
+                params.put("doctor_location_id", doctor_location_id+"");
                 Log.w("Doctor",params.toString());
                 return params;
             }

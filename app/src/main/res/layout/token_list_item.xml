@@ -33,12 +33,14 @@
                 android:layout_width="match_parent"
                 android:text="Patient name"
                 android:gravity="center"
+                android:visibility="gone"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/patient_phone_no"
                 android:layout_width="match_parent"
                 android:text="Patient phone number"
                 android:gravity="center"
+                android:visibility="gone"
                 android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/token_status"
@@ -51,6 +53,7 @@
             android:layout_width="match_parent"
             android:text="patient reason"
             android:gravity="center"
+            android:visibility="gone"
             android:layout_height="wrap_content" />
         </LinearLayout>
 

@@ -2,7 +2,9 @@ package com.application.nobita;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,6 +41,10 @@ public class TokenListViewAdapter extends RecyclerView.Adapter<TokenListViewAdap
         if (v.getId() == R.id.completed_btn){
             clinicTokenlist.remove(position);
             setTokenStatusBackend("completed",clinicToken);
+            notifyDataSetChanged();
+        } else if (v.getId() == R.id.delete){
+            clinicTokenlist.remove(position);
+            setTokenStatusBackend("deleted",clinicToken);
             notifyDataSetChanged();
         }
     }
@@ -84,9 +90,10 @@ public class TokenListViewAdapter extends RecyclerView.Adapter<TokenListViewAdap
     }
 
     public  class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
+
         public TextView patient_name,patient_phone_no,token_serial_no,token_status,patient_reason;
-        public Button completed_btn;
+        public Button completed_btn,delete_btn;
+        public CardView cardView;
         public ViewHolder(View view) {
             super(view);
             patient_name = (TextView)view.findViewById(R.id.patient_name);
@@ -95,13 +102,12 @@ public class TokenListViewAdapter extends RecyclerView.Adapter<TokenListViewAdap
             token_status = (TextView)view.findViewById(R.id.token_status);
             patient_reason = (TextView)view.findViewById(R.id.patient_reason);
             completed_btn = (Button)view.findViewById(R.id.completed_btn);
-
-
-
+            cardView = (CardView)view.findViewById(R.id.card_view);
+            delete_btn = (Button)view.findViewById(R.id.delete);
         }
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
+
     public TokenListViewAdapter(ArrayList<ClinicToken> clinicTokenlist,Context context) {
         this.clinicTokenlist = clinicTokenlist;
         this.context = context;
@@ -110,11 +116,11 @@ public class TokenListViewAdapter extends RecyclerView.Adapter<TokenListViewAdap
         requestQueue = Volley.newRequestQueue(this.context);
     }
 
-    // Create new views (invoked by the layout manager)
+
     @Override
     public TokenListViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
-        // create a new view
+
         View token_list_fragment = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.token_list_item, parent, false);
 
@@ -122,23 +128,31 @@ public class TokenListViewAdapter extends RecyclerView.Adapter<TokenListViewAdap
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         ClinicToken clinicToken = (ClinicToken)clinicTokenlist.get(position);
         holder.patient_name.setText(clinicToken.getPatient_name());
+
         holder.patient_phone_no.setText(clinicToken.getPatient_phone_no());
+
         holder.token_serial_no.setText(clinicToken.getToken_serial_no());
         holder.token_status.setText(clinicToken.getToken_status());
         holder.patient_reason.setText(clinicToken.getPatient_reason());
         holder.completed_btn.setOnClickListener(this);
+        holder.delete_btn.setOnClickListener(this);
         holder.completed_btn.setTag(position);
-
+        holder.delete_btn.setTag(position);
+        if (clinicToken.getToken_status() == "complete") {
+            holder.cardView.setCardBackgroundColor(Color.GREEN);
+        } else if ((clinicToken.getToken_status() == "removed")) {
+            holder.cardView.setCardBackgroundColor(Color.RED);
+        }
 
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+
     @Override
     public int getItemCount() {
         return clinicTokenlist.size();
